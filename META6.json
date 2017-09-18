@@ -1,0 +1,19 @@
+{
+    "perl" : "6.c",
+    "name" : "CucumisSextus",
+    "version" : "0.1",
+    "description" : "Cucumber-like BDD Framework",
+    "authors" : [
+        "Robert Lemmen"
+    ],
+    "depends" : [
+    ],
+    "test-depends" : [
+    ],
+    "provides" : {
+        "Pluggable" : "lib/Cucumber.pm6",
+        "Pluggable" : "lib/Gherkin.pm6"
+    },
+    "license" : "Artistic-2.0",
+    "source-url" : "https://github.com/robertlemmen/perl6-cucumis-sextus.git"
+}
