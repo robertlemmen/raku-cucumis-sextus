@@ -46,7 +46,7 @@ sub parse-feature-file($filename) is export {
             # comment, ignore
         }
         # XXX all over the place: space after colon single, multiple, optional?
-        elsif m/^ <{ $keywords{$lang}{'feature'} }> ':' \s* (.+)/ {
+        elsif m/^ <{ $keywords{$lang}{'feature'} }> ':' \s* (.+) $/ {
             if ! defined $feature {
                 $feature = Feature.new;
                 $feature.name = ~$0;
@@ -55,7 +55,7 @@ sub parse-feature-file($filename) is export {
                 # XXX die
             }
         }
-        elsif m/^ \s* <{ $keywords{$lang}{'scenario'} }> ':' \s* (.+)/ {
+        elsif m/^ \s* <{ $keywords{$lang}{'scenario'} }> ':' \s* (.+) $/ {
             if defined $feature {
                 $scenario = Scenario.new;
                 $scenario.name = ~$0;
@@ -65,22 +65,24 @@ sub parse-feature-file($filename) is export {
                 # XXX die
             }
         }
-        elsif m/^ \s* <{ $keywords{$lang}{'background'} }> ':' \s* (.+)/ {
+        elsif m/^ \s* <{ $keywords{$lang}{'background'} }> ':' \s* (.+) $/ {
             # XXX
         }
-        elsif m/^ \s* <{ $keywords{$lang}{'scenario'} }> ':' \s* (.+)/ {
+        elsif m/^ \s* <{ $keywords{$lang}{'scenario'} }> ':' \s* (.+) $/ {
         }
         # XXX scenario outlines
-        elsif m/^ \s*     <{ $keywords{$lang}{'given'} }>
+        elsif m/^ \s* (   <{ $keywords{$lang}{'given'} }>
                         | <{ $keywords{$lang}{'when'} }>
                         | <{ $keywords{$lang}{'then'} }>
                         | <{ $keywords{$lang}{'and'} }>
-                        | <{ $keywords{$lang}{'but'} }>
-                            ':' (.+)/ {
-            # XXX
-#            $scenario.steps.push(Step.new);
+                        | <{ $keywords{$lang}{'but'} }> )
+                            \s* (.+) $/ {
+            my $step = Step.new;
+            $step.verb = $0;
+            $step.text = $1;
+            $scenario.steps.push($step);
         }
-        elsif m/^ \s* <{ $keywords{$lang}{'examples'} }> ':' \s* (.+)/ {
+        elsif m/^ \s* <{ $keywords{$lang}{'examples'} }> \s* (.+) $/ {
             # XXX
         }
         elsif m/^ \s* \|/ {

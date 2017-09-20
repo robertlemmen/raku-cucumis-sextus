@@ -4,12 +4,13 @@ use v6;
 
 use Test;
 
-use CucumisSextus::Cucumber;
+use CucumisSextus::Core;
+use CucumisSextus::Gherkin;
 
-Given m/test234/, sub ($ctx) {
-    say "my shit called with $ctx";
-};
+use StepDefs;
 
-cucumber-test-run;
+my $feature = parse-feature-file('t/features/basic.feature');
+execute-feature($feature);
+
 
 done-testing;
