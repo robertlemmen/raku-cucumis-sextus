@@ -7,6 +7,7 @@ use Test;
 use CucumisSextus::Core;
 use CucumisSextus::Gherkin;
 
+use lib 't/features/step_definitions';
 use StepDefs;
 
 my $feature = parse-feature-file('t/features/basic.feature');
