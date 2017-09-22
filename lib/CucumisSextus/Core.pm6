@@ -4,10 +4,6 @@ use X::CucumisSextus::FeatureExecFailure;
 
 my @defined-steps;
 
-sub add-stepdef($type, $match, $callable, $file, $line) is export {
-    @defined-steps.push([$type, $match, $callable, $file, $line]);
-}
-
 sub execute-step($step) {
     my @matchers-found;
     for @defined-steps -> $s {
@@ -38,6 +34,14 @@ sub execute-step($step) {
             die X::CucumisSextus::FeatureExecFailure.new("Glue code signature does not match step");
         }
     }
+}
+
+sub add-stepdef($type, $match, $callable, $file, $line) is export {
+    @defined-steps.push([$type, $match, $callable, $file, $line]);
+}
+
+sub clear-stepdefs() is export {
+    @defined-steps = ();
 }
 
 sub execute-feature($feature) is export {
