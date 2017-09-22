@@ -34,9 +34,8 @@ sub execute-step($step) {
             $s[2](|$/.list);
         }
         else {
-            # XXX die
-            say "# signature mismatch!";
-            say "## " ~ $/.list;
+            # XXX better detail
+            die X::CucumisSextus::FeatureExecFailure.new("Glue code signature does not match step");
         }
     }
 }

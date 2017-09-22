@@ -28,4 +28,8 @@ lives-ok({ $feature = parse-feature-file('t/features/broken-verbs-mismatch.featu
 throws-like({ execute-feature($feature) } , X::CucumisSextus::FeatureExecFailure, 
     "Executing a feature with glue/step verb mismatch should fail");
 
+lives-ok({ $feature = parse-feature-file('t/features/broken-signature.feature') }, "Parsing a basic feature should work");
+throws-like({ execute-feature($feature) } , X::CucumisSextus::FeatureExecFailure, 
+    "Executing a feature against glue code with mismatched signature should fail");
+
 done-testing;

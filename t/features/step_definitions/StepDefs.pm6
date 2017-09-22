@@ -19,6 +19,11 @@ Step /'having pressed' \s* (123)/, sub ($num) {
     $trace ~= 'B';
 };
 
+Step /'having pressed' \s* (\d+) \s* 'again'/, sub () {
+    say "# broken-having-pressed-again";
+    $trace ~= 'B';
+};
+
 Then /'the display should show' \s* (\d+)/, sub ($num) {
     say "# then-display-shows '$num'";
     $trace ~= 'C';
