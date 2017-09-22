@@ -1,27 +1,42 @@
 unit module CucumisSextus::Core;
 
-# XXX this may need renaming to "core" or so
+use X::CucumisSextus::FeatureExecFailure;
 
-my @matchers;
+my @defined-steps;
 
 sub add-stepdef($type, $match, $callable, $file, $line) is export {
-    @matchers.push([$type, $match, $callable, $file, $line]);
+    @defined-steps.push([$type, $match, $callable, $file, $line]);
 }
 
 sub execute-step($step) {
-    for @matchers -> $m {
-        # XXX this should remember any found match rather than executing directly, s it can
-        # warn if ambiguous
-        my $cm = $m[1];
-        # XXX should anchor to both ends, can use prematch/postmatch
+    my @matchers-found;
+    for @defined-steps -> $s {
+        my $cm = $s[1];
         if $step.text.match($cm) && (~$/ eq $step.text) {
-            # XXX also match verb
-            if $m[2].cando( \(|$/.list) ) {
-                $m[2](|$/.list);
+            if $s[0] eq $step.verb|'*' {
+                push @matchers-found, $s;
             }
-            else {
-                say "# signature mismatch!";
-            }
+        }
+    }
+    if @matchers-found.elems == 0 {
+        # XXX better detail
+        die X::CucumisSextus::FeatureExecFailure.new("No matching glue code found for step '" ~ $step.text ~ "'");
+    }
+    elsif @matchers-found.elems > 1 {
+        # XXX better detail
+        die X::CucumisSextus::FeatureExecFailure.new("Ambiguous glue code for step '" ~ $step.text ~ "', candidates are: ");
+    }
+    else {
+        my $s = @matchers-found[0];
+        # re-exec to get matches...
+        $step.text.match($s[1]);
+        if $s[2].cando( \(|$/.list) ) {
+            $s[2](|$/.list);
+        }
+        else {
+            # XXX die
+            say "# signature mismatch!";
+            say "## " ~ $/.list;
         }
     }
 }
