@@ -3,6 +3,7 @@ unit module CucumisSextus::Gherkin;
 use X::CucumisSextus::FeatureParseFailure;
 
 class Feature {
+    has $.filename is rw;
     has $.name is rw;
     has @.scenarios is rw;
 }
@@ -53,6 +54,7 @@ sub parse-feature-file($filename) is export {
         elsif m/^ <{ $keywords{$lang}{'feature'} }> ':' \s* (.+) $/ {
             if ! defined $feature {
                 $feature = Feature.new;
+                $feature.filename = $filename;
                 $feature.name = ~$0;
             }
             else {

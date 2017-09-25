@@ -11,8 +11,9 @@
     "test-depends" : [
     ],
     "provides" : {
-        "Pluggable" : "lib/Cucumber.pm6",
-        "Pluggable" : "lib/Gherkin.pm6"
+        "CucumisSextus" : "lib/Gherkin.pm6"
+        "CucumisSextus" : "lib/Glue.pm6"
+        "CucumisSextus" : "lib/Core.pm6"
     },
     "license" : "Artistic-2.0",
     "source-url" : "https://github.com/robertlemmen/perl6-cucumis-sextus.git"

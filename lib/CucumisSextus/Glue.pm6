@@ -7,14 +7,14 @@ sub Given($match, $callable) is export {
     add-stepdef('given', $match, $callable, $caller.file, $caller.line);
 }
 
+sub When($match, $callable) is export {
+    my $caller = callframe(1);
+    add-stepdef('when', $match, $callable, $caller.file, $caller.line);
+}
+
 sub Then($match, $callable) is export {
     my $caller = callframe(1);
     add-stepdef('then', $match, $callable, $caller.file, $caller.line);
-}
-
-sub And($match, $callable) is export {
-    my $caller = callframe(1);
-    add-stepdef('and', $match, $callable, $caller.file, $caller.line);
 }
 
 sub Step($match, $callable) is export {
