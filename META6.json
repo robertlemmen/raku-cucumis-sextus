@@ -11,8 +11,8 @@
     "test-depends" : [
     ],
     "provides" : {
-        "CucumisSextus" : "lib/Gherkin.pm6"
-        "CucumisSextus" : "lib/Glue.pm6"
+        "CucumisSextus" : "lib/Gherkin.pm6",
+        "CucumisSextus" : "lib/Glue.pm6",
         "CucumisSextus" : "lib/Core.pm6"
     },
     "license" : "Artistic-2.0",
