@@ -7,7 +7,10 @@ use CucumisSextus::Core;
 
 # XXX we should have a cmdline arg to stop after the first problem
 
-sub MAIN(*@feature-spec) {
+sub MAIN(:$tags, *@feature-spec) {
+
+    say "### " ~ $tags.perl;
+
     # collect all feature-spec to execute
     my @features;
     my $have-errors = False;
@@ -15,6 +18,8 @@ sub MAIN(*@feature-spec) {
     if @feature-spec.elems == 0 {
         push @feature-spec, 'features';
     }
+
+    # XXX parse tags and filter by them
 
     for @feature-spec -> $f {
         my $path = IO::Path.new($f);
@@ -91,9 +96,9 @@ sub MAIN(*@feature-spec) {
     }
 }
 
-sub USAGE(){
+sub USAGE() {
     # XXX improve!
-    print Q:c:to/EOH/; 
+    print Q:c:to/EOH/;
     Usage: {$*PROGRAM-NAME}
     EOH
 }

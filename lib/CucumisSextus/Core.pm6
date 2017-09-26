@@ -4,7 +4,7 @@ use X::CucumisSextus::FeatureExecFailure;
 
 my @defined-steps;
 
-sub execute-step($step) {
+sub execute-step($feature, $step) {
     my @matchers-found;
     for @defined-steps -> $s {
         my $cm = $s[1];
@@ -16,11 +16,11 @@ sub execute-step($step) {
     }
     if @matchers-found.elems == 0 {
         # XXX better detail
-        die X::CucumisSextus::FeatureExecFailure.new("No matching glue code found for step '" ~ $step.text ~ "'");
+        die X::CucumisSextus::FeatureExecFailure.new("No matching glue code found for step '" ~ $step.text ~ "' at " ~ $feature.filename ~ ":" ~ $step.line);
     }
     elsif @matchers-found.elems > 1 {
         # XXX better detail
-        die X::CucumisSextus::FeatureExecFailure.new("Ambiguous glue code for step '" ~ $step.text ~ "', candidates are: ");
+        die X::CucumisSextus::FeatureExecFailure.new("Ambiguous glue code for step '" ~ $step.text ~ "' at " ~ $feature.filename ~ ":" ~ $step.line ~ ", candidates are: ");
     }
     else {
         my $s = @matchers-found[0];
@@ -52,7 +52,7 @@ sub execute-feature($feature) is export {
 
         for $scenario.steps -> $step {
             say "    Step " ~ $step.verb ~ " " ~ $step.text;
-            execute-step($step);
+            execute-step($feature, $step);
         }
     }
 }

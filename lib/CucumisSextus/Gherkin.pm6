@@ -5,17 +5,22 @@ use X::CucumisSextus::FeatureParseFailure;
 class Feature {
     has $.filename is rw;
     has $.name is rw;
+    has $.line is rw;
     has @.scenarios is rw;
+    has @.tags is rw;
 }
 
 class Scenario {
     has $.name is rw;
+    has $.line is rw;
     has @.steps is rw;
+    has @.tags is rw;
 }
 
 class Step {
     has $.verb is rw;
     has $.text is rw;
+    has $.line is rw;
 }
 
 # XXX this will get long, we could put it into it's own module
@@ -38,6 +43,7 @@ sub parse-feature-file($filename) is export {
     my $feature;
     my $scenario;
     my $last-verb;
+    my @tags;
 
     # XXX tags are madness: https://github.com/cucumber/cucumber/wiki/Tags
     # XXX description lines for features and scenarios
@@ -50,12 +56,20 @@ sub parse-feature-file($filename) is export {
         elsif m/^ \s* '#'/ {
             # comment, ignore
         }
+        elsif m:g/^\s*('@'(\S+)\s*)+$/ {
+            # tags, add to list
+            # XXX surely tags can't happen just anywhere...
+            push @tags, $0[0]>>[0]>>.Str;
+        }
         # XXX all over the place: space after colon single, multiple, optional?
         elsif m/^ <{ $keywords{$lang}{'feature'} }> ':' \s* (.+) $/ {
             if ! defined $feature {
                 $feature = Feature.new;
                 $feature.filename = $filename;
                 $feature.name = ~$0;
+                $feature.tags = @tags;
+                $feature.line = $line-number;
+                @tags = ();
             }
             else {
                 die X::CucumisSextus::FeatureParseFailure.new("Failed to parse feature file " 
@@ -66,6 +80,8 @@ sub parse-feature-file($filename) is export {
             if defined $feature {
                 $scenario = Scenario.new;
                 $scenario.name = ~$0;
+                $scenario.tags = @tags;
+                $scenario.line = $line-number;
                 $feature.scenarios.push($scenario);
 
                 $last-verb = Nil;
@@ -85,6 +101,7 @@ sub parse-feature-file($filename) is export {
             my $step = Step.new;
             $step.verb = $verb;
             $step.text = $0;
+            $step.line = $line-number;
             $scenario.steps.push($step);
             $last-verb = $verb;
         }
@@ -93,6 +110,7 @@ sub parse-feature-file($filename) is export {
             my $step = Step.new;
             $step.verb = $verb;
             $step.text = $0;
+            $step.line = $line-number;
             $scenario.steps.push($step);
             $last-verb = $verb;
         }
@@ -101,6 +119,7 @@ sub parse-feature-file($filename) is export {
             my $step = Step.new;
             $step.verb = $verb;
             $step.text = $0;
+            $step.line = $line-number;
             $scenario.steps.push($step);
             $last-verb = $verb;
         }
@@ -117,6 +136,7 @@ sub parse-feature-file($filename) is export {
             my $step = Step.new;
             $step.verb = $verb;
             $step.text = $1;
+            $step.line = $line-number;
             $scenario.steps.push($step);
         }
         # XXX scenario outlines
