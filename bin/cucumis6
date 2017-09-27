@@ -4,12 +4,11 @@ use v6;
 
 use CucumisSextus::Gherkin;
 use CucumisSextus::Core;
+use CucumisSextus::Tags;
 
 # XXX we should have a cmdline arg to stop after the first problem
 
 sub MAIN(:$tags, *@feature-spec) {
-
-    say "### " ~ $tags.perl;
 
     # collect all feature-spec to execute
     my @features;
@@ -18,8 +17,6 @@ sub MAIN(:$tags, *@feature-spec) {
     if @feature-spec.elems == 0 {
         push @feature-spec, 'features';
     }
-
-    # XXX parse tags and filter by them
 
     for @feature-spec -> $f {
         my $path = IO::Path.new($f);
@@ -45,6 +42,15 @@ sub MAIN(:$tags, *@feature-spec) {
         }
     }
 
+    # parse tag filters
+    my @tag-filters;
+    if $tags {
+        for $tags.flat -> $t {
+            push @tag-filters, parse-filter($t);
+            # XXX exception handler, setting $have-errors
+        }
+    }
+
     if $have-errors {
         # XXX say that there were errors above
         exit 1;
@@ -55,7 +61,10 @@ sub MAIN(:$tags, *@feature-spec) {
     # now execute the features
     $have-errors = False;
     for @features -> $f {
-        say "Executing " ~ $f.filename ~ "...";
+        if !all-filters-match(@tag-filters, $f.tags) {
+            say "Skipping feature '" ~ $f.name ~ "' due to tag filters";
+            next;
+        }
 
         # XXX we could avoid that if we group the features by $steps-base
         clear-stepdefs();
@@ -72,7 +81,7 @@ sub MAIN(:$tags, *@feature-spec) {
             }
         }
 
-        execute-feature($f);
+        execute-feature($f, @tag-filters);
 
         CATCH {
             # XXX need to load step definitions

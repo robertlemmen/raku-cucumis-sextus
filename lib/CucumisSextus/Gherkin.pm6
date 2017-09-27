@@ -1,6 +1,7 @@
 unit module CucumisSextus::Gherkin;
 
 use X::CucumisSextus::FeatureParseFailure;
+use CucumisSextus::Tags;
 
 class Feature {
     has $.filename is rw;
@@ -56,10 +57,10 @@ sub parse-feature-file($filename) is export {
         elsif m/^ \s* '#'/ {
             # comment, ignore
         }
-        elsif m:g/^\s*('@'(\S+)\s*)+$/ {
+        elsif my @ctags = parse-tags($_) {
             # tags, add to list
             # XXX surely tags can't happen just anywhere...
-            push @tags, $0[0]>>[0]>>.Str;
+            @tags.append(@ctags);
         }
         # XXX all over the place: space after colon single, multiple, optional?
         elsif m/^ <{ $keywords{$lang}{'feature'} }> ':' \s* (.+) $/ {

@@ -8,6 +8,12 @@ This is in very early development, and is lacking lots of features and
 probably has quite a lot of bugs as well. But it can already do some basic
 cases, see below. 
 
+This is trying to be faithful and compatible to the "consensus" Cucumber 
+implementation, which also means that most of this documentation applies:
+https://github.com/cucumber/cucumber/wiki/A-Table-Of-Content
+
+Please let me know if there are any surprising discrepancies.
+
 ## Feature Files
 
 By default, cucumis will search for feature files under features/*.feature, the 
@@ -55,6 +61,37 @@ In order to execute the tests described in a feature file, the "cucumis6" tool c
 be used:
 
     cucumis6 features
+
+### Tags
+
+You can tag your features and scenarios like this:
+
+    @calc @basic 
+    Feature: Basic Calculator Functions
+    In order to check I've written the Calculator class correctly
+    As a developer I want to check some basic operations
+    So that I can have confidence in my Calculator class.
+
+    @positive
+    Scenario: First Key Press on the Display
+        Given a new Calculator object
+        And having pressed 1
+        Then the display should show 1
+
+And then select only certain features and scenarios (the latter inherit all the 
+tags from the corresponding feature as well as have their own tags) when executing 
+cucumis:
+
+    cucumis6 --tags=@calc
+
+You can negate the matches with a '~', and OR them together with commas:
+
+    cucumis6 --tags=@calc,@print
+    cucumis6 --tags=~@positive
+
+And you can AND them together by repeatedly specifying --tags:
+
+    cucumis6 --tags=@calc --tags@basic
 
 ## Feedback and Contact
 

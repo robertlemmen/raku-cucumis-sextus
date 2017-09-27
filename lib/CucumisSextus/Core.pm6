@@ -1,5 +1,7 @@
 unit module CucumisSextus::Core;
 
+use CucumisSextus::Tags;
+
 use X::CucumisSextus::FeatureExecFailure;
 
 my @defined-steps;
@@ -44,10 +46,18 @@ sub clear-stepdefs() is export {
     @defined-steps = ();
 }
 
-sub execute-feature($feature) is export {
+sub execute-feature($feature, @tag-filters) is export {
     say "Feature " ~ $feature.name;
 
     for $feature.scenarios -> $scenario {
+        my @effective-tags;
+        @effective-tags.append($feature.tags);
+        @effective-tags.append($scenario.tags);
+
+        if !all-filters-match(@tag-filters, @effective-tags) {
+            say "  Skipping scenario '" ~ $scenario.name ~ "' due to tag filters";
+            next;
+        }
         say "  Scenario " ~ $scenario.name;
 
         for $scenario.steps -> $step {
