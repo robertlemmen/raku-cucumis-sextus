@@ -9,24 +9,34 @@ Given /'a new Calculator object'/, sub () {
     $trace ~= 'A';
 };
 
+Given /'a freshly unboxed Calculator'/, sub () {
+    say "# unboxed-calculator";
+    $trace ~= 'B';
+}
+
 Step /'having pressed' \s* (\d+)/, sub ($num) {
     say "# having-pressed '$num'";
-    $trace ~= 'B';
+    $trace ~= "C$num";
 };
 
 Step /'having pressed' \s* (123)/, sub ($num) {
     say "# broken-having-pressed '$num'";
-    $trace ~= 'B';
+    $trace ~= "D$num";
 };
 
 Step /'having pressed' \s* (\d+) \s* 'again'/, sub () {
     say "# broken-having-pressed-again";
-    $trace ~= 'B';
+    $trace ~= 'E';
 };
 
 Then /'the display should show' \s* (\d+)/, sub ($num) {
     say "# then-display-shows '$num'";
-    $trace ~= 'C';
+    $trace ~= "F$num";
+};
+
+Step /'having it switched on'/, sub () {
+    say "# having-switched-on";
+    $trace ~= "G";
 };
 
 sub clear-trace() is export {

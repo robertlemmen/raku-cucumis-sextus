@@ -8,13 +8,16 @@ This is in very early development, and is lacking lots of features and
 probably has quite a lot of bugs as well. But it can already do some basic
 cases, see below. 
 
+## Usage
+
 This is trying to be faithful and compatible to the "consensus" Cucumber 
 implementation, which also means that most of this documentation applies:
-https://github.com/cucumber/cucumber/wiki/A-Table-Of-Content
+https://github.com/cucumber/cucumber/wiki/A-Table-Of-Content and will also
+explain background and theory better than I possibly could.
 
 Please let me know if there are any surprising discrepancies.
 
-## Feature Files
+### Basic Feature Files
 
 By default, cucumis will search for feature files under features/*.feature, the 
 syntax of these is the same as in other cumumber implementations. Currently only 
@@ -30,7 +33,7 @@ basic scenarios are supported, no tables or templates. An example:
         And having pressed 1
         Then the display should show 1
 
-## Step Definitions
+### Step Definitions
 
 Cucumis will load all .pm6 files under 'step_definitions' in the same directory 
 that holds the feature file in question, e.g. "features/step_definitions/StepDefs.pm6":
@@ -55,7 +58,7 @@ When cucumis executes a feature file, it will find the appropriate step definiti
 for each step, and execute it. If there is no step definition or there is a problem 
 with it, it will report an error.
 
-## Execution
+### Execution
 
 In order to execute the tests described in a feature file, the "cucumis6" tool can 
 be used:
@@ -92,6 +95,34 @@ You can negate the matches with a '~', and OR them together with commas:
 And you can AND them together by repeatedly specifying --tags:
 
     cucumis6 --tags=@calc --tags@basic
+
+### Background Scenarios
+
+You can define "background" scenarios:
+
+    Feature: Basic Calculator Functions
+    In order to check I've written the Calculator class correctly
+    As a developer I want to check some basic operations
+    So that I can have confidence in my Calculator class.
+
+    Background: Unboxing a new Calculator
+        Given a freshly unboxed Calculator
+        And having it switched on
+
+    Scenario: First Key Press on the Display
+        Given a new Calculator object
+        And having pressed 1
+        Then the display should show 1
+    
+    Scenario: Second Key Press on the Display
+        Given a new Calculator object
+        And having pressed 1
+        And having pressed 2
+        Then the display should show 12
+
+These background scenarios will get executed before each of the other 
+scenarios of the feature. There can only be one background scenario and
+it needs to be the first one in the feature;
 
 ## Feedback and Contact
 

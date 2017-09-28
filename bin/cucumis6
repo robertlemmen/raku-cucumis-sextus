@@ -91,11 +91,6 @@ sub MAIN(:$tags, *@feature-spec) {
                 $have-errors = True;
             }
             # XXX different exceptions for test errors
-            # XXX perhaps we should not catch unknown exceptions
-            default {
-                note .^name, do given .backtrace[0] { .file, .line, .subname }
-                $have-errors = True;
-            }
         }
     }
 

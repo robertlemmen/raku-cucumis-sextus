@@ -58,6 +58,15 @@ sub execute-feature($feature, @tag-filters) is export {
             say "  Skipping scenario '" ~ $scenario.name ~ "' due to tag filters";
             next;
         }
+
+        if $feature.background {
+            say "  Background " ~ $feature.background.name;
+            for $feature.background.steps -> $step {
+                say "    Step " ~ $step.verb ~ " " ~ $step.text;
+                execute-step($feature, $step);
+        }
+        }
+
         say "  Scenario " ~ $scenario.name;
 
         for $scenario.steps -> $step {

@@ -14,7 +14,7 @@ clear-trace;
 my $feature;
 lives-ok({ $feature = parse-feature-file('t/features/basic.feature') }, "Parsing a basic feature should work");
 lives-ok({ execute-feature($feature, []) } , "Executing the feature should work");
-is(get-trace, 'ABC', 'All steps have executed in right order');
+is(get-trace, 'AC1F1', 'All steps have executed in right order');
 
 lives-ok({ $feature = parse-feature-file('t/features/broken-ambiguous.feature') }, "Parsing a basic feature should work");
 throws-like({ execute-feature($feature, []) } , X::CucumisSextus::FeatureExecFailure, 

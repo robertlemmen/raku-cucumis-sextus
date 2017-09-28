@@ -8,6 +8,7 @@ class Feature {
     has $.name is rw;
     has $.line is rw;
     has @.scenarios is rw;
+    has $.background is rw;
     has @.tags is rw;
 }
 
@@ -93,7 +94,28 @@ sub parse-feature-file($filename) is export {
             }
         }
         elsif m/^ \s* <{ $keywords{$lang}{'background'} }> ':' \s* (.+) $/ {
-            # XXX
+            if defined $feature {
+                if $feature.background {
+                    die X::CucumisSextus::FeatureParseFailure.new("Failed to parse feature file " 
+                        ~ "at $filename:$line-number: multiple background scenarios for feature");
+                }
+                if $feature.scenarios {
+                    die X::CucumisSextus::FeatureParseFailure.new("Failed to parse feature file " 
+                        ~ "at $filename:$line-number: background scenario after regular scenario");
+                }
+
+                $scenario = Scenario.new;
+                $scenario.name = ~$0;
+                $scenario.tags = @tags;
+                $scenario.line = $line-number;
+                $feature.background = $scenario;
+
+                $last-verb = Nil;
+            }
+            else {
+                die X::CucumisSextus::FeatureParseFailure.new("Failed to parse feature file " 
+                    ~ "at $filename:$line-number: background definition without feature");
+            }
         }
         elsif m/^ \s* <{ $keywords{$lang}{'scenario'} }> ':' \s* (.+) $/ {
         }
