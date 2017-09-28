@@ -14,10 +14,11 @@ Given /'a freshly unboxed Calculator'/, sub () {
     $trace ~= 'B';
 }
 
-Step /'having pressed' \s* (\d+)/, sub ($num) {
-    say "# having-pressed '$num'";
-    $trace ~= "C$num";
-};
+Step /'having pressed' \s+ (\S+) [\s+ 'and' \s+ (\S+)]*/, sub (+@btns) {
+    for @btns -> $b {
+        $trace ~= "C$b";
+    }
+}
 
 Step /'having pressed' \s* (123)/, sub ($num) {
     say "# broken-having-pressed '$num'";

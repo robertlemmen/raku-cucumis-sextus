@@ -24,9 +24,9 @@ syntax of these is the same as in other cumumber implementations. Currently only
 basic scenarios are supported, no tables or templates. An example:
 
     Feature: Basic Calculator Functions
-    In order to check I've written the Calculator class correctly
-    As a developer I want to check some basic operations
-    So that I can have confidence in my Calculator class.
+        In order to check I've written the Calculator class correctly
+        As a developer I want to check some basic operations
+        So that I can have confidence in my Calculator class.
 
     Scenario: First Key Press on the Display
         Given a new Calculator object
@@ -58,6 +58,17 @@ When cucumis executes a feature file, it will find the appropriate step definiti
 for each step, and execute it. If there is no step definition or there is a problem 
 with it, it will report an error.
 
+Note that the step definitions can have arguments that are taken from captures
+within the regular expression, as in the "having pressed example above. You can
+even use non-capturing groups in the regex and slurpy arguments (quite cool!):
+
+
+    Step /'having pressed' \s+ (\S+) [\s+ 'and' \s+ (\S+)]*/, sub (+@btns) {
+        for @btns -> $b {
+            # implement!
+        }
+    }
+
 ### Execution
 
 In order to execute the tests described in a feature file, the "cucumis6" tool can 
@@ -71,9 +82,9 @@ You can tag your features and scenarios like this:
 
     @calc @basic 
     Feature: Basic Calculator Functions
-    In order to check I've written the Calculator class correctly
-    As a developer I want to check some basic operations
-    So that I can have confidence in my Calculator class.
+        In order to check I've written the Calculator class correctly
+        As a developer I want to check some basic operations
+        So that I can have confidence in my Calculator class.
 
     @positive
     Scenario: First Key Press on the Display
@@ -101,9 +112,9 @@ And you can AND them together by repeatedly specifying --tags:
 You can define "background" scenarios:
 
     Feature: Basic Calculator Functions
-    In order to check I've written the Calculator class correctly
-    As a developer I want to check some basic operations
-    So that I can have confidence in my Calculator class.
+        In order to check I've written the Calculator class correctly
+        As a developer I want to check some basic operations
+        So that I can have confidence in my Calculator class.
 
     Background: Unboxing a new Calculator
         Given a freshly unboxed Calculator

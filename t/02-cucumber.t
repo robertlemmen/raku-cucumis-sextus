@@ -32,4 +32,9 @@ lives-ok({ $feature = parse-feature-file('t/features/broken-signature.feature') 
 throws-like({ execute-feature($feature, []) } , X::CucumisSextus::FeatureExecFailure, 
     "Executing a feature against glue code with mismatched signature should fail");
 
+clear-trace;
+lives-ok({ $feature = parse-feature-file('t/features/slurpy.feature') }, "Parsing a feature with slupy args should work");
+lives-ok({ execute-feature($feature, []) } , "Executing the slurpy feature/glue code should work");
+is(get-trace, 'AC1C2C3C+C4C5C6C+F579', 'All steps have executed in right order');
+
 done-testing;
