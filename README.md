@@ -14,7 +14,6 @@ cases, see below.
 * Examples
 * Multiline strings
 * Other languages
-* Before/After hooks
 * Failure exceptions from glue code
 * Harness improvements to allow parallel execution
 * Reporting
@@ -175,6 +174,25 @@ would yield:
     [{:first("0.5"), :operator("+"), :result("0.6"), :second("0.1")}, 
      {:first("0.01"), :operator("/"), :result("1"), :second("0.01")}, 
      {:first("10"), :operator("*"), :result("10"), :second("1")}]
+
+### Hooks
+
+You can create "before" and "after" hooks in your glue code, these will be 
+executed before and after each scenario respectively. Before hooks will be 
+executed in the order they are registered, and after hooks in reverse order. 
+Note however that registration order is unpredicatble across multiple glue 
+code modules. These hooks get executed for *any* scenario, so you typically 
+want to inspect the feature and scenario passed in before doing anything:
+
+    Before sub ($feature, $scenario) {
+        if $feature.tags.first(* ~~ 'hooked') {
+            # implement!
+        }
+    }
+
+    After sub ($feature, $scenario) {
+        # implement!
+    }
 
 ## Feedback and Contact
 

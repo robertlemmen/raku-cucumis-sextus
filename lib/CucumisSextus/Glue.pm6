@@ -21,3 +21,11 @@ sub Step($match, $callable) is export {
     my $caller = callframe(1);
     add-stepdef('*', $match, $callable, $caller.file, $caller.line);
 }
+
+sub Before($callable) is export {
+    add-before-hook($callable);
+}
+
+sub After($callable) is export {
+    add-after-hook($callable);
+}

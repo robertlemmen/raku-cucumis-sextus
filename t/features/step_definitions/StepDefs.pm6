@@ -47,6 +47,18 @@ Step /'having successfully performed the following calculations'/, sub (@table) 
     }
 }
 
+Before sub ($feature, $scenario) {
+    if $feature.tags.first(* ~~ 'hooked') {
+        $trace ~= '[';
+    }
+}
+
+After sub ($feature, $scenario) {
+    if $feature.tags.first(* ~~ 'hooked') {
+        $trace ~= ']';
+    }
+}
+
 sub clear-trace() is export {
     $trace = '';
 }

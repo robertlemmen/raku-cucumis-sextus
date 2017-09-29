@@ -42,4 +42,9 @@ lives-ok({ $feature = parse-feature-file('t/features/basic-table.feature') }, "P
 lives-ok({ execute-feature($feature, []) } , "Executing the feature with table should work");
 is(get-trace, 'AT0.5+0.1T0.01/0.01T10*1C3F3', 'All steps have executed in right order');
 
+clear-trace;
+lives-ok({ $feature = parse-feature-file('t/features/basic-hooked.feature') }, "Parsing a feature with hooks should work");
+lives-ok({ execute-feature($feature, []) } , "Executing the feature with hooks should work");
+is(get-trace, '[AC1F1]', 'All steps and hooks have executed in right order');
+
 done-testing;

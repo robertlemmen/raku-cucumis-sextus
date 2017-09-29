@@ -5,6 +5,8 @@ use CucumisSextus::Tags;
 use X::CucumisSextus::FeatureExecFailure;
 
 my @defined-steps;
+my @before-hooks;
+my @after-hooks;
 
 sub execute-step($feature, $step) {
     my @matchers-found;
@@ -46,8 +48,18 @@ sub add-stepdef($type, $match, $callable, $file, $line) is export {
     @defined-steps.push([$type, $match, $callable, $file, $line]);
 }
 
+sub add-before-hook($hook) is export {
+    @before-hooks.push($hook);
+}
+
+sub add-after-hook($hook) is export {
+    @after-hooks.push($hook);
+}
+
 sub clear-stepdefs() is export {
     @defined-steps = ();
+    @before-hooks = ();
+    @after-hooks = ();
 }
 
 sub execute-feature($feature, @tag-filters) is export {
@@ -68,14 +80,21 @@ sub execute-feature($feature, @tag-filters) is export {
             for $feature.background.steps -> $step {
                 say "    Step " ~ $step.verb ~ " " ~ $step.text;
                 execute-step($feature, $step);
-        }
+            }
         }
 
         say "  Scenario " ~ $scenario.name;
 
+        for @before-hooks -> $hook {
+            $hook($feature, $scenario);
+        }
         for $scenario.steps -> $step {
             say "    Step " ~ $step.verb ~ " " ~ $step.text;
             execute-step($feature, $step);
+        }
+        # XXX we want to run these even if there are failures in the steps
+        for @after-hooks.reverse -> $hook {
+            $hook($feature, $scenario);
         }
     }
 }
