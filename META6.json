@@ -9,6 +9,7 @@
     "depends" : [
     ],
     "test-depends" : [
+        "Test::Meta"
     ],
     "provides" : {
         "CucumisSextus" : "lib/Gherkin.pm6",
