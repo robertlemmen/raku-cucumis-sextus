@@ -37,4 +37,9 @@ lives-ok({ $feature = parse-feature-file('t/features/slurpy.feature') }, "Parsin
 lives-ok({ execute-feature($feature, []) } , "Executing the slurpy feature/glue code should work");
 is(get-trace, 'AC1C2C3C+C4C5C6C+F579', 'All steps have executed in right order');
 
+clear-trace;
+lives-ok({ $feature = parse-feature-file('t/features/basic-table.feature') }, "Parsing a feature with a table should work");
+lives-ok({ execute-feature($feature, []) } , "Executing the feature with table should work");
+is(get-trace, 'AT0.5+0.1T0.01/0.01T10*1C3F3', 'All steps have executed in right order');
+
 done-testing;

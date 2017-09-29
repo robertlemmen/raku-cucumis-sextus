@@ -23,6 +23,7 @@ class Step {
     has $.verb is rw;
     has $.text is rw;
     has $.line is rw;
+    has @.table is rw;
 }
 
 # XXX this will get long, we could put it into it's own module
@@ -44,8 +45,10 @@ sub parse-feature-file($filename) is export {
     my $lang = 'en';
     my $feature;
     my $scenario;
+    my $step;
     my $last-verb;
     my @tags;
+    my @column-header;
 
     # XXX tags are madness: https://github.com/cucumber/cucumber/wiki/Tags
     # XXX description lines for features and scenarios
@@ -53,7 +56,8 @@ sub parse-feature-file($filename) is export {
     my $line-number = 1;
     for $filename.IO.lines {
         if m/^ \s* $/ {
-            # blank line, ignore
+            # blank line, end step/scenario
+            @column-header = ();
         }
         elsif m/^ \s* '#'/ {
             # comment, ignore
@@ -80,6 +84,7 @@ sub parse-feature-file($filename) is export {
         }
         elsif m/^ \s* <{ $keywords{$lang}{'scenario'} }> ':' \s* (.+) $/ {
             if defined $feature {
+                # XXX end previous step
                 $scenario = Scenario.new;
                 $scenario.name = ~$0;
                 $scenario.tags = @tags;
@@ -121,7 +126,7 @@ sub parse-feature-file($filename) is export {
         }
         elsif m/^ \s* <{ $keywords{$lang}{'given'} }> \s* (.+) $/ {
             my $verb = 'given';
-            my $step = Step.new;
+            $step = Step.new;
             $step.verb = $verb;
             $step.text = $0;
             $step.line = $line-number;
@@ -130,7 +135,7 @@ sub parse-feature-file($filename) is export {
         }
         elsif m/^ \s* <{ $keywords{$lang}{'when'} }> \s* (.+) $/ {
             my $verb = 'when';
-            my $step = Step.new;
+            $step = Step.new;
             $step.verb = $verb;
             $step.text = $0;
             $step.line = $line-number;
@@ -139,7 +144,7 @@ sub parse-feature-file($filename) is export {
         }
         elsif m/^ \s* <{ $keywords{$lang}{'then'} }> \s* (.+) $/ {
             my $verb = 'then';
-            my $step = Step.new;
+            $step = Step.new;
             $step.verb = $verb;
             $step.text = $0;
             $step.line = $line-number;
@@ -156,7 +161,7 @@ sub parse-feature-file($filename) is export {
                     ~ "scenario");
             }
             my $verb = $last-verb;
-            my $step = Step.new;
+            $step = Step.new;
             $step.verb = $verb;
             $step.text = $1;
             $step.line = $line-number;
@@ -166,8 +171,21 @@ sub parse-feature-file($filename) is export {
         elsif m/^ \s* <{ $keywords{$lang}{'examples'} }> \s* (.+) $/ {
             # XXX
         }
-        elsif m/^ \s* \|/ {
-            # XXX
+        elsif m/^ \s* \| (.*) \| \s* $/ {
+            # XXX when can this occur?
+            my @fields = $0.trim.split('|')>>.trim;
+            if @column-header {
+                if @fields.elems != @column-header.elems {
+                    die X::CucumisSextus::FeatureParseFailure.new("Failed to parse feature file " 
+                        ~ "at $filename:$line-number: inconsistent number of columns across table");
+                }
+                my %hash = @column-header Z=> @fields;
+                $step.table.push(%hash);
+            }
+            else {
+                @column-header = @fields;
+            }
+            # XXX first line is column headers, turn others into hashes
         }
         $line-number++;
     }

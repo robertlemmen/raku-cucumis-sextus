@@ -40,6 +40,13 @@ Step /'having it switched on'/, sub () {
     $trace ~= "G";
 };
 
+Step /'having successfully performed the following calculations'/, sub (@table) {
+    say "# having-performed";
+    for @table -> $r {
+        $trace ~= "T" ~ $r{'first'} ~ $r{'operator'} ~ $r{'second'};
+    }
+}
+
 sub clear-trace() is export {
     $trace = '';
 }

@@ -28,8 +28,12 @@ sub execute-step($feature, $step) {
         my $s = @matchers-found[0];
         # re-exec to get matches...
         $step.text.match($s[1]);
-        if $s[2].cando( \(|$/.list.flat) ) {
-            $s[2](|$/.list.flat);
+        my @args = $/.list.flat>>.Str;
+        if $step.table {
+           push @args, $step.table;
+        }
+        if $s[2].cando( \(|@args) ) {
+            $s[2](|@args);
         }
         else {
             # XXX better detail
