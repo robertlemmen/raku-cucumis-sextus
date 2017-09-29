@@ -124,34 +124,6 @@ And you can AND them together by repeatedly specifying --tags:
 You can define "background" scenarios:
 
     Feature: Basic Calculator Functions
-        In order to check I've written the Calculator class correctly
-        As a developer I want to check some basic operations
-        So that I can have confidence in my Calculator class.
-
-    Background: Unboxing a new Calculator
-        Given a freshly unboxed Calculator
-        And having it switched on
-
-    Scenario: First Key Press on the Display
-        Given a new Calculator object
-        And having pressed 1
-        Then the display should show 1
-    
-    Scenario: Second Key Press on the Display
-        Given a new Calculator object
-        And having pressed 1
-        And having pressed 2
-        Then the display should show 12
-
-These background scenarios will get executed before each of the other 
-scenarios of the feature. There can only be one background scenario and
-it needs to be the first one in the feature;
-
-### Background Scenarios
-
-You can define "background" scenarios:
-
-    Feature: Basic Calculator Functions
     In order to check I've written the Calculator class correctly
     As a developer I want to check some basic operations
     So that I can have confidence in my Calculator class.
@@ -173,21 +145,21 @@ You can define "background" scenarios:
 
 These background scenarios will get executed before each of the other 
 scenarios of the feature. There can only be one background scenario and
-it needs to be the first one in the feature;
+it needs to be the first one in the feature.
 
 ### Tables
 
 Your steps can contain tabular data:
 
-  Scenario: Separation of calculations
-    Given a new Calculator object
-    And having successfully performed the following calculations
-      | first | operator | second | result |
-      | 0.5   | +        | 0.1    | 0.6    |
-      | 0.01  | /        | 0.01   | 1      |
-      | 10    | *        | 1      | 10     |
-    And having pressed 3
-    Then the display should show 3
+    Scenario: Separation of calculations
+        Given a new Calculator object
+        And having successfully performed the following calculations
+            | first | operator | second | result |
+            | 0.5   | +        | 0.1    | 0.6    |
+            | 0.01  | /        | 0.01   | 1      |
+            | 10    | *        | 1      | 10     |
+        And having pressed 3
+        Then the display should show 3
 
 Your step definition code will get the table passed in as a array of 
 hashes, in the final parameter after the captures. The keys come from the
