@@ -1,6 +1,6 @@
 # Cucumis Sextus
 
-... a Cucumber-like BDD framework for Perl 6.
+... a Cucumber-like Behavior-Driven Development (BDD) Test Framework for Perl 6.
 
 ## State
 
@@ -10,8 +10,6 @@ cases, see below.
 
 ### Missing Features
 
-* Scenario outlines
-* Examples
 * Multiline strings
 * Other languages
 * Failure exceptions from glue code
@@ -193,6 +191,28 @@ want to inspect the feature and scenario passed in before doing anything:
     After sub ($feature, $scenario) {
         # implement!
     }
+
+### Outlines and Examples
+
+You can write a single scenario and execute it multiple times for different 
+sets of input and output values using outlines and examples:
+
+    Scenario Outline: Basic arithmetic
+        Given a new Calculator object
+        And having keyed <first>
+        And having keyed <operator>
+        And having keyed <second>
+        And having pressed =
+        Then the display should show <result>
+        Examples:
+        | first | operator | second | result |
+        | 5.0   | +        | 5.0    | 10     |
+        | 6     | /        | 3      | 2      |
+        | 10    | *        | 7.550  | 75.5   |
+        | 3     | -        | 10     | -7     |
+
+Note that the glue code regular expression has to match the substituted value, 
+not the original one from the step text.
 
 ## Feedback and Contact
 

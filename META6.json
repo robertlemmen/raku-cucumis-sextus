@@ -2,7 +2,7 @@
     "perl" : "6.*",
     "name" : "CucumisSextus",
     "version" : "0.1",
-    "description" : "Cucumber-like BDD Framework",
+    "description" : "Cucumber-like Behavior-Driven Development (BDD) Test Framework",
     "authors" : [
         "Robert Lemmen"
     ],

@@ -30,7 +30,7 @@ Step /'having pressed' \s* (\d+) \s* 'again'/, sub () {
     $trace ~= 'E';
 };
 
-Then /'the display should show' \s* (\d+)/, sub ($num) {
+Then /'the display should show' \s* ('-'? <[\d . ]>+)/, sub ($num) {
     say "# then-display-shows '$num'";
     $trace ~= "F$num";
 };
@@ -45,6 +45,11 @@ Step /'having successfully performed the following calculations'/, sub (@table) 
     for @table -> $r {
         $trace ~= "T" ~ $r{'first'} ~ $r{'operator'} ~ $r{'second'};
     }
+}
+
+Step /'having keyed' \s* (\S+)/, sub ($key) {
+    say "# having-keyed";
+    $trace ~= "t$key";
 }
 
 Before sub ($feature, $scenario) {

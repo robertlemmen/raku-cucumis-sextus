@@ -17,6 +17,7 @@ class Scenario {
     has $.line is rw;
     has @.steps is rw;
     has @.tags is rw;
+    has @.examples is rw;
 }
 
 class Step {
@@ -49,6 +50,8 @@ sub parse-feature-file($filename) is export {
     my $last-verb;
     my @tags;
     my @column-header;
+    my $in-examples;
+    my $is-outline;
 
     # XXX tags are madness: https://github.com/cucumber/cucumber/wiki/Tags
     # XXX description lines for features and scenarios
@@ -56,8 +59,7 @@ sub parse-feature-file($filename) is export {
     my $line-number = 1;
     for $filename.IO.lines {
         if m/^ \s* $/ {
-            # blank line, end step/scenario
-            @column-header = ();
+            # blank line
         }
         elsif m/^ \s* '#'/ {
             # comment, ignore
@@ -82,6 +84,26 @@ sub parse-feature-file($filename) is export {
                     ~ "at $filename:$line-number: multiple features per file");
             }
         }
+        elsif m/^ \s* <{ $keywords{$lang}{'scenario-outline'} }> ':' \s* (.+) $/ {
+            # XXX very-similar to the below, refactor
+            if defined $feature {
+                # XXX end previous step
+                $scenario = Scenario.new;
+                $scenario.name = ~$0;
+                $scenario.tags = @tags;
+                $scenario.line = $line-number;
+                $feature.scenarios.push($scenario);
+
+                $last-verb = Nil;
+                $in-examples = False;
+                $is-outline = True;
+                @column-header = ();
+            }
+            else {
+                die X::CucumisSextus::FeatureParseFailure.new("Failed to parse feature file " 
+                    ~ "at $filename:$line-number: scenario definition without feature");
+            }
+        }
         elsif m/^ \s* <{ $keywords{$lang}{'scenario'} }> ':' \s* (.+) $/ {
             if defined $feature {
                 # XXX end previous step
@@ -92,6 +114,9 @@ sub parse-feature-file($filename) is export {
                 $feature.scenarios.push($scenario);
 
                 $last-verb = Nil;
+                $in-examples = False;
+                $is-outline = False;
+                @column-header = ();
             }
             else {
                 die X::CucumisSextus::FeatureParseFailure.new("Failed to parse feature file " 
@@ -121,8 +146,6 @@ sub parse-feature-file($filename) is export {
                 die X::CucumisSextus::FeatureParseFailure.new("Failed to parse feature file " 
                     ~ "at $filename:$line-number: background definition without feature");
             }
-        }
-        elsif m/^ \s* <{ $keywords{$lang}{'scenario'} }> ':' \s* (.+) $/ {
         }
         elsif m/^ \s* <{ $keywords{$lang}{'given'} }> \s* (.+) $/ {
             my $verb = 'given';
@@ -167,9 +190,14 @@ sub parse-feature-file($filename) is export {
             $step.line = $line-number;
             $scenario.steps.push($step);
         }
-        # XXX scenario outlines
         elsif m/^ \s* <{ $keywords{$lang}{'examples'} }> \s* (.+) $/ {
-            # XXX
+            if $is-outline {
+                $in-examples = True;
+            }
+            else {
+                die X::CucumisSextus::FeatureParseFailure.new("Failed to parse feature file " 
+                    ~ "at $filename:$line-number: examples given but not in scenario outline");
+            }
         }
         elsif m/^ \s* \| (.*) \| \s* $/ {
             # XXX when can this occur?
@@ -180,12 +208,16 @@ sub parse-feature-file($filename) is export {
                         ~ "at $filename:$line-number: inconsistent number of columns across table");
                 }
                 my %hash = @column-header Z=> @fields;
-                $step.table.push(%hash);
+                if $in-examples {
+                    $scenario.examples.push(%hash);
+                }
+                else {
+                    $step.table.push(%hash);
+                }
             }
             else {
                 @column-header = @fields;
             }
-            # XXX first line is column headers, turn others into hashes
         }
         $line-number++;
     }
