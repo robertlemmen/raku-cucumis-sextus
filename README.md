@@ -11,7 +11,6 @@ cases, see below.
 ### Missing Features
 
 * Multiline strings
-* Other languages
 * Failure exceptions from glue code
 * Harness improvements to allow parallel execution
 * Reporting
@@ -213,6 +212,23 @@ sets of input and output values using outlines and examples:
 
 Note that the glue code regular expression has to match the substituted value, 
 not the original one from the step text.
+
+## Other Languages
+
+If you want to write your feature files in your native language rather than in
+english, you can certianly do that by putting a language directive into the first
+line of your feature file:
+
+    # language: de
+    Funktionalität: Einfache Taschenrechner Operationen
+
+    Szenario: Eine Taste wird gedrueckt
+        Angenommen ich habe einen Taschenrechner
+        Und Ich habe die Taste 1 gedrueckt
+        Dann sollte der Bildschirm 1 anzeigen
+
+If you are able to speak a language with cool characters like chinese or thai, 
+please get in touch, I need prettier examples!
 
 ## Feedback and Contact
 
