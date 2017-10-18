@@ -46,7 +46,7 @@ sub kv-replace($ptext, $kv, $feature, $step) {
             $text ~~ s/\< $match \>/$replacement/;
         }
         else {
-            die X::CucumisSextus::FeatureExecFailure.new("No replacement for '<$match>' in step '" ~ $ptext ~ "' at " ~ $feature.filename ~ ":" ~ $step.line);
+            die X::CucumisSextus::FeatureExecFailure.new("No replacement for '<$match>' in step '" ~ $ptext ~ "' at " ~ $feature.file.filename ~ ":" ~ $step.line-from);
         }
     }
     return $text;
@@ -65,11 +65,11 @@ sub execute-step($feature, $step, $kvsubst, $reporter) {
     }
     if @matchers-found.elems == 0 {
         # XXX better detail
-        die X::CucumisSextus::FeatureExecFailure.new("No matching glue code found for step '" ~ $text ~ "' at " ~ $feature.filename ~ ":" ~ $step.line);
+        die X::CucumisSextus::FeatureExecFailure.new("No matching glue code found for step '" ~ $text ~ "' at " ~ $feature.file.filename ~ ":" ~ $step.line-from);
     }
     elsif @matchers-found.elems > 1 {
         # XXX better detail
-        die X::CucumisSextus::FeatureExecFailure.new("Ambiguous glue code for step '" ~ $text ~ "' at " ~ $feature.filename ~ ":" ~ $step.line ~ ", candidates are: ");
+        die X::CucumisSextus::FeatureExecFailure.new("Ambiguous glue code for step '" ~ $text ~ "' at " ~ $feature.file.filename ~ ":" ~ $step.line-from ~ ", candidates are: ");
     }
     else {
         my $s = @matchers-found[0];
