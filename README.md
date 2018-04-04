@@ -296,6 +296,10 @@ you get the usual problems with shells, editors and the like:
         و فشرده شدن ۱۲۳
         آنگاه صفحه نمایش باید ۱۲۳ را نشان بدهد
 
+## License
+
+CucumisSextus is licensed under the [Artistic License 2.0](https://opensource.org/licenses/Artistic-2.0).
+
 ## Feedback and Contact
 
 Please let me know what you think: Robert Lemmen <robertle@semistable.com>
