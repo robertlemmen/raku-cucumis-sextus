@@ -1,10 +1,10 @@
 {
-    "perl" : "6.*",
     "name" : "CucumisSextus",
-    "version" : "0.1.1",
     "description" : "Cucumber-like Behavior-Driven Development (BDD) Test Framework",
+    "version" : "0.1.1",
+    "perl" : "6.c",
     "authors" : [
-        "Robert Lemmen"
+        "Robert Lemmen <robertle@semistable.com>"
     ],
     "depends" : [
         "Terminal::ANSIColor"
@@ -13,17 +13,17 @@
         "Test::META"
     ],
     "provides" : {
-        "X::CucumisSextus::FeatureExecFailure" : "lib/X/CucumisSextus/FeatureExecFailure.pm6",
-        "X::CucumisSextus::FeatureParseFailure" : "lib/X/CucumisSextus/FeatureParseFailure.pm6",
-        "CucumisSextus::Glue" : "lib/CucumisSextus/Glue.pm6",
-        "CucumisSextus::Gherkin" : "lib/CucumisSextus/Gherkin.pm6",
-        "CucumisSextus::I18n" : "lib/CucumisSextus/I18n.pm6",
-        "CucumisSextus::Core" : "lib/CucumisSextus/Core.pm6",
-        "CucumisSextus::Tags" : "lib/CucumisSextus/Tags.pm6",
-        "CucumisSextus::Reporter" : "lib/CucumisSextus/Reporter.pm6",
-        "CucumisSextus::Reporter::Null" : "lib/CucumisSextus/Reporter/Null.pm6",
-        "CucumisSextus::Reporter::Simple" : "lib/CucumisSextus/Reporter/Simple.pm6"
+        "X::CucumisSextus::FeatureExecFailure" : "lib/X/CucumisSextus/FeatureExecFailure.rakumod",
+        "X::CucumisSextus::FeatureParseFailure" : "lib/X/CucumisSextus/FeatureParseFailure.rakumod",
+        "CucumisSextus::Glue" : "lib/CucumisSextus/Glue.rakumod",
+        "CucumisSextus::Gherkin" : "lib/CucumisSextus/Gherkin.rakumod",
+        "CucumisSextus::I18n" : "lib/CucumisSextus/I18n.rakumod",
+        "CucumisSextus::Core" : "lib/CucumisSextus/Core.rakumod",
+        "CucumisSextus::Tags" : "lib/CucumisSextus/Tags.rakumod",
+        "CucumisSextus::Reporter" : "lib/CucumisSextus/Reporter.rakumod",
+        "CucumisSextus::Reporter::Null" : "lib/CucumisSextus/Reporter/Null.rakumod",
+        "CucumisSextus::Reporter::Simple" : "lib/CucumisSextus/Reporter/Simple.rakumod"
     },
     "license" : "Artistic-2.0",
-    "source-url" : "https://github.com/robertlemmen/perl6-cucumis-sextus.git"
+    "source-url" : "git://github.com/robertlemmen/perl6-cucumis-sextus.git"
 }

@@ -1,6 +1,7 @@
 # Cucumis Sextus
 
-... a Cucumber-like Behavior-Driven Development (BDD) Test Framework for Perl 6.
+... a Cucumber-like Behavior-Driven Development (BDD) Test Framework for the
+Raku language
 
 ## State
 
@@ -12,7 +13,10 @@ bound to be many bugs, please let me know how you get along.
 * Harness improvements to allow parallel execution
 * TAP integration
 * Different types of reporting
-* Neater printing of featrues/scenarios/steps as they are being executed
+* Neater printing of features/scenarios/steps as they are being executed
+
+There is also a [ToDo List](TODO.md), and there are a lot of `XXX` fixmes in the
+code.
 
 ## Usage
 
@@ -25,7 +29,7 @@ Please let me know if there are any surprising discrepancies.
 
 ### Basic Feature Files
 
-By default, cucumis will search for feature files under features/*.feature, the 
+By default, cucumis will search for feature files under `features/*.feature`, the 
 syntax of these is the same as in other cumumber implementations. Currently only 
 basic scenarios are supported, no tables or templates. An example:
 
@@ -41,8 +45,8 @@ basic scenarios are supported, no tables or templates. An example:
 
 ### Step Definitions
 
-Cucumis will load all .pm6 files under 'step_definitions' in the same directory 
-that holds the feature file in question, e.g. "features/step_definitions/StepDefs.pm6":
+Cucumis will load all .pm6/.rakumod files under 'step_definitions' in the same directory 
+that holds the feature file in question, e.g. "features/step_definitions/StepDefs.rakumod":
 
     unit module StepDefs;
 
@@ -58,7 +62,7 @@ that holds the feature file in question, e.g. "features/step_definitions/StepDef
 
 Step definition modules are using semi-keywords from the CucumisSextus::Glue module 
 and a regular expression to define step definitions. The "Step" keywords matches any
-ype/verb in the scenario steps, and serves as a sort of wildcard. 
+type/verb in the scenario steps, and serves as a sort of wildcard. 
 
 When cucumis executes a feature file, it will find the appropriate step definition 
 for each step, and execute it. If there is no step definition or there is a problem 
@@ -67,7 +71,6 @@ with it, it will report an error.
 Note that the step definitions can have arguments that are taken from captures
 within the regular expression, as in the "having pressed example above. You can
 even use non-capturing groups in the regex and slurpy arguments (quite cool!):
-
 
     Step /'having pressed' \s+ (\S+) [\s+ 'and' \s+ (\S+)]*/, sub (+@btns) {
         for @btns -> $b {
