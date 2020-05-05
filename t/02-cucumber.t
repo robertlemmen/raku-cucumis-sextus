@@ -1,7 +1,3 @@
-#!/usr/bin/env perl6
-
-use v6;
-
 use Test;
 
 use CucumisSextus::Core;
@@ -13,6 +9,8 @@ use lib 't/features/step_definitions';
 use StepDefs;
 
 my $reporter = CucumisSextus::Reporter::Null.new;
+
+plan 53;
 
 clear-trace;
 my $feature;

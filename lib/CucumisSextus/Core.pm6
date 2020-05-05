@@ -115,9 +115,9 @@ sub execute-scenario($feature, $scenario, $kvsubst, $result, $reporter) {
             # XXX need other args
             $result.failed++;
             # XXX how do we do this through the reporter?
-            say "Exception (" ~ .^name ~ ") during step execution: " ~ .Str;
+            note "Exception (" ~ .^name ~ ") during step execution: " ~ .Str;
             for .backtrace {
-                say "    ", .file, " ", .line;
+                note "    ", .file, " ", .line;
             }
         }
     }
