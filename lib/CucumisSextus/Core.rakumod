@@ -8,6 +8,8 @@ my @defined-steps;
 my @before-hooks;
 my @after-hooks;
 
+our $reporter;
+
 class CucumisResult is export {
     has $.executed is rw = 0;
     has $.skipped is rw = 0;
@@ -52,7 +54,7 @@ sub kv-replace($ptext, $kv, $feature, $step) {
     return $text;
 }
 
-sub execute-step($feature, $step, $kvsubst, $reporter) {
+sub execute-step($feature, $step, $kvsubst) {
     my $text = kv-replace($step.text, $kvsubst, $feature, $step);
     my @matchers-found;
     for @defined-steps -> $s {
@@ -92,11 +94,13 @@ sub execute-step($feature, $step, $kvsubst, $reporter) {
     }
 }
 
-sub execute-scenario($feature, $scenario, $kvsubst, $result, $reporter) {
+sub execute-scenario($feature, $scenario, $kvsubst, $result) {
     $result.executed++;
     $reporter.before-scenario($feature, $scenario);
+    my $last-step;
     for $scenario.steps -> $step {
-        execute-step($feature, $step, $kvsubst, $reporter);
+        $last-step = $step;
+        execute-step($feature, $step, $kvsubst);
         # XXX need other args
         $reporter.step($feature, Nil, $step, True);
     }
@@ -110,7 +114,7 @@ sub execute-scenario($feature, $scenario, $kvsubst, $result, $reporter) {
             .throw;
         }
         default {
-            $reporter.step($feature, Nil, Nil, False);
+            $reporter.step($feature, Nil, $last-step, False);
             $reporter.after-scenario($feature, $scenario, False);
             # XXX need other args
             $result.failed++;
@@ -123,7 +127,8 @@ sub execute-scenario($feature, $scenario, $kvsubst, $result, $reporter) {
     }
 }
 
-sub execute-feature($feature, @tag-filters, $result, $reporter) is export {
+sub execute-feature($feature, @tag-filters, $result, $areporter) is export {
+    $reporter = $areporter;
     # XXX if  there is nothing recognizabl;e in the feature, the error handling
     # is terrible, this can be reproduced by e.g. removing the "#language" line
     # from a non-english feature
@@ -147,13 +152,13 @@ sub execute-feature($feature, @tag-filters, $result, $reporter) is export {
 
         for @subst -> $kvsubst {
             if $feature.background {
-                execute-scenario($feature, $feature.background, $kvsubst, $result, $reporter);
+                execute-scenario($feature, $feature.background, $kvsubst, $result);
             }
 
             for @before-hooks -> $hook {
                 $hook($feature, $scenario);
             }
-            execute-scenario($feature, $scenario, $kvsubst, $result, $reporter);
+            execute-scenario($feature, $scenario, $kvsubst, $result);
             # XXX we want to run these even if there are failures in the steps
             for @after-hooks.reverse -> $hook {
                 $hook($feature, $scenario);

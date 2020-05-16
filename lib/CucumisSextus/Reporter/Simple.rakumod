@@ -60,6 +60,8 @@ method step($feature, $scenario, $step, $result) {
     else {
         print color('red') if $*OUT.t;
     }
+    # XXX if the step throws, then this becomes confusing, does not print an
+    # exception but fails in here
     for $feature.file.lines[$step.line-from .. $step.line-to] {
         say $_;
     }
@@ -89,4 +91,10 @@ method after-run() {
         " $!scenarios-succeeded succeeded,", 
         " $!scenarios-failed failed";
     }
+}
+
+method diag($text) {
+    print color('blue') if $*OUT.t;
+    say $text;
+    print color('reset') if $*OUT.t;
 }

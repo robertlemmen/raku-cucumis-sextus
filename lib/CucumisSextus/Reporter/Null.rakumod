@@ -22,3 +22,6 @@ method after-scenario($feature, $scenario, $result) {
 
 method after-run() {
 }
+
+method diag($text) {
+}

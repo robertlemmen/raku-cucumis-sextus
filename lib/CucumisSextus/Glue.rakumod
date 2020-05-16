@@ -29,3 +29,7 @@ sub Before($callable) is export {
 sub After($callable) is export {
     add-after-hook($callable);
 }
+
+sub diag($text) is export {
+    CucumisSextus::Core::<$reporter>.diag($text);
+}
