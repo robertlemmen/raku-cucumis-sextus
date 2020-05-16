@@ -74,7 +74,7 @@ sub MAIN(:$tags, *@feature-spec) {
         my $steps-base = IO::Path.new($f.file.filename).parent.child("step_definitions");
         if ($steps-base.d) {
             for $steps-base.dir -> $mod {
-                if $mod.f && $mod ~~ /.pm6?$/ {
+                if $mod.f && $mod ~~ /'.pm6' | '.rakumod' $/ {
                     # XXX something funky going on, why can't I use this without storing 
                     # in variable? and the error message is weird as well
                     my $abs-path = $mod.absolute;
