@@ -1,7 +1,8 @@
 # Cucumis Sextus ToDo List
 
 * more debug output if selected
-* document diag() 
+* document diag(), allow suppression of it
+* continuation lines in steps?
 * excetions from step should be reported neater
 * named captures in step def regex
 * document context information being carried between steps
